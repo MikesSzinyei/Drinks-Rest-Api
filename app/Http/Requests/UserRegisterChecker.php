@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class TypeChecker extends FormRequest
+class UserRegisterChecker extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,25 @@ class TypeChecker extends FormRequest
     public function rules(): array
     {
         return [
-            "type"=> "required"
+            "name"=>"required|max:20",
+            "email"=>"required|email",
+            "password"=>"required|min:6",
+            "confirm_password"=>"required|same:password"
         ];
-        
     }
 
     public function messages() {
+
         return [
-            "type.required" => "Típus elvárt"
+            "name.required" => "Név elvárt",
+            "name.max"=> "Túl hosszú név",
+            "email.required"=> "Email elvárt",
+            "email.email"=> "Invalid email cím",
+            "password.required" => "Jelszó elvárt",
+            "password.min" => "Túl rövid a jelszó",
+            "confirm_password.required"=>"Hiányzó jelszó megerősítés",
+            "confirm_password.same" => "Nem egyező jelszó" 
         ];
-        
     }
 
     public function failedValidation(Validator $validator){
