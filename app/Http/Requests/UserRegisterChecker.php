@@ -24,8 +24,8 @@ class UserRegisterChecker extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|max:20",
-            "email"=>"required|email",
+            "name"=>"required|max:20|unique:users",
+            "email"=>"required|email|unique:users",
             "password"=>"required|min:6",
             "confirm_password"=>"required|same:password"
         ];
