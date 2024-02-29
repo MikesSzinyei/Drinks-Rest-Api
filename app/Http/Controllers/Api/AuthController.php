@@ -35,7 +35,7 @@ class AuthController extends ResponseController {
             }
             $user = Auth::user();
             (new BanController)->resetBannedData($user->email);
-            //$success["token"]=$user->createToken($user->name."token")->plainTextToken;
+            $success["token"]=$user->createToken($user->name."token")->plainTextToken;
             $success["name"] = $user->name;
             return $this->sendResponse($success, "Sikeres bejelentkezés");
         }else{

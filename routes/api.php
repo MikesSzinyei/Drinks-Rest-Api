@@ -48,6 +48,6 @@ Route::get("/type", [TypeController::class,"getTypes"]);
 
 Route::get("/package", [PackageController::class,"getPackages"]);
 
-Route::post("/register", [AuthController::class, "register"])->middleware("throttle:100, 43200");
-Route::post("/login", [AuthController::class, "login"])->middleware("throttle:100, 43200");
+Route::post("/register", [AuthController::class, "register"]);/*->middleware("throttle:100, 43200")*/;
+Route::post("/login", [AuthController::class, "login"])/*->middleware("throttle:100, 43200")*/;
 

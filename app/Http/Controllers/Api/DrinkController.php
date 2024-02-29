@@ -9,13 +9,24 @@ Use App\Http\Controllers\Api\ResponseController;
 Use App\Http\Controllers\Api\TypeController;
 Use App\Http\Controllers\Api\PackageController;
 use App\Http\Requests\DrinkAddChecker;
+use Illuminate\Support\Facades\Gate;
 
 class DrinkController extends ResponseController
 {
     public function getDrinks(){
 
-        $drinks= Drink::with("type","package")->get();
-        return $this->sendResponse(DrinkResource::collection($drinks),"Italok betöltve");
+        if(Gate::allows("is_admin", auth()->user())) {
+
+            $drinks= Drink::with("type","package")->get();
+            return $this->sendResponse(DrinkResource::collection($drinks),"Italok betöltve");
+            
+        } else {
+            return response()->json("Nem vagy admin");
+        }
+
+        // $drinks= Drink::with("type","package")->get();
+        // return $this->sendResponse(DrinkResource::collection($drinks),"Italok betöltve");
+
     }
     public function getDrink(Request $request){
         $name= $request["drink"];
@@ -27,18 +38,26 @@ class DrinkController extends ResponseController
         return $this->sendResponse(DrinkResource::make($drink),"$name megtalálva");
     }
 
+    
+
     public function newDrink(DrinkAddChecker $request){
-        $request->validated();
-        $input=$request->all();
 
-        $drink= new Drink;
-        $drink->drink=$input["drink"];
-        $drink->amount=$input["amount"];
-        $drink->type_id=(new TypeController)->getTypeId($input["type"]);
-        $drink->package_id=(new PackageController)->getPackageId($input["package"]);
+        if(Gate::allows("is_admin", auth()->user())) {
+            $request->validated();
+            $input=$request->all();
 
-        $drink->save();
-        return $this->sendResponse($drink,"Ital kiírva");
+            $drink= new Drink;
+            $drink->drink=$input["drink"];
+            $drink->amount=$input["amount"];
+            $drink->type_id=(new TypeController)->getTypeId($input["type"]);
+            $drink->package_id=(new PackageController)->getPackageId($input["package"]);
+
+            $drink->save();
+            return $this->sendResponse($drink,"Ital kiírva");
+
+        } else {
+            return response()->json("Nem vagy admin");
+        }
     }
 
     public function modifyDrink(DrinkAddChecker $request){

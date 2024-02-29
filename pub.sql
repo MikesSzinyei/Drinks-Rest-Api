@@ -1,27 +1,3 @@
-DROP DATABASE IF EXISTS diak_pub;
-CREATE DATABASE diak_pub;
-USE diak_pub;
-
-CREATE TABLE types(
-	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	type VARCHAR(20)
-);
-
-CREATE TABLE packages(
-	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	package VARCHAR(20)
-);
-
-CREATE TABLE drinks(
-	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(20),
-	amount INTEGER,
-	type_id INTEGER,
-	quantity_id INTEGER,
-	FOREIGN KEY ( type_id ) REFERENCES types( id ),
-	FOREIGN KEY ( package_id ) REFERENCES packages( id )
-);
-
 INSERT INTO types (type) VALUES
 ( "Sörök" ),
 ( "Borok" ),

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rules\Password;
 
 class UserRegisterChecker extends FormRequest
 {
@@ -24,10 +25,10 @@ class UserRegisterChecker extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|max:20|unique:users",
-            "email"=>"required|email|unique:users",
-            "password"=>"required|min:6",
-            "confirm_password"=>"required|same:password"
+            "name"=>["required","max:20"],
+            "email"=>["required","regex:/(.+)@(.+)\.(.+)/i","unique:users"],
+            "password"=>["required",Password::min(6)->letters()->mixedCase()->numbers()->symbols()/*->uncompromised()*/,"confirmed"],
+            "password_confirmation"=>"required"
         ];
     }
 
@@ -40,6 +41,11 @@ class UserRegisterChecker extends FormRequest
             "email.email"=> "Invalid email cím",
             "password.required" => "Jelszó elvárt",
             "password.min" => "Túl rövid a jelszó",
+            "password.letters" => "Betűnek kell lennie",
+            "password.mixedCase" => "Kis és nagybetűnek lennie kell",
+            "password.numbers" => "Számnak kell lennie",
+            "password.symbols" => "Különleges karakternek kell lennie",
+            //"password.uncompromised" => "Túl gyakori jelszó",
             "confirm_password.required"=>"Hiányzó jelszó megerősítés",
             "confirm_password.same" => "Nem egyező jelszó" 
         ];
